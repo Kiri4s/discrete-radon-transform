@@ -1,0 +1,8 @@
+[flake8]
+max-complexity = 10
+max-line-length = 88
+application-import-names = discrete_radon_transform,tests
+import-order-style = google
+ignore = E203,E501,W503
+select = ANN,B,B9,BLK,C,D,E,F,I,S,W
+docstring-convention = google
