@@ -2,10 +2,16 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import sys
+
+sys.path.append("discrete-radon-transform/discrete_radon_transform")
+from . import __version__
+import click
 
 
 class Discrete_Radon_Transform:
     def __init__(self, path_to_picture: str, angle_acc=500, shift_acc=500) -> None:
+        """main calculations"""
         # open picture with PILL
         input_img = Image.open(path_to_picture)
         # transform picture to grayscale: (black: 0, white: 255)
@@ -46,16 +52,19 @@ class Discrete_Radon_Transform:
                 self.Transformed[h, k] = dx * sum
 
     def negative(self, M: np.matrix) -> np.matrix:
+        """Reverses matrixs' values |value - 255|"""
         # m_ij = |m_ij - 255|
         return np.ones(M.shape) * 255 - M
 
     def get_transform(self) -> np.matrix:
+        """returnes result of transformation"""
         return self.Transformed
 
     def get_params(self):
         raise NotImplementedError
 
     def display_result(self, name="radon_result", dir="./") -> plt.figure:
+        """returns heatmap of the result"""
         fig = plt.figure()
         plt.title(
             "$\\tilde F (p(k), t(h)) = \Delta x * \sum_{m=0}^{M-1}F(x(m), p(k)*x(m)+t(h))$"
@@ -72,3 +81,45 @@ class Discrete_Radon_Transform:
 if __name__ == "__main__":
     drdt = Discrete_Radon_Transform("straight_lines_samples.JPG")
     drdt.display_result()
+
+
+@click.command()
+@click.option(
+    "--path_to_picture",
+    "-p",
+    default="./discrete_radon_transform/straight_lines_samples.JPG",
+    help="path to picture",
+    show_default=True,
+)
+@click.option(
+    "--angle_accuracy",
+    "-a",
+    default=500,
+    help="angle_accuracy",
+    show_default=True,
+)
+@click.option(
+    "--shift_accuracy",
+    "-s",
+    default=500,
+    help="shift accuracy",
+    show_default=True,
+)
+@click.option(
+    "--save_to_dir",
+    "-d",
+    default="./discrete_radon_transform",
+    help="saves result heatmap to the directory",
+    show_default=True,
+)
+@click.version_option(version=__version__)
+def main(
+    path_to_picture: str, angle_accuracy: int, shift_accuracy: int, save_to_dir: str
+) -> None:
+    """The Discrete Radon Transform project."""
+    drdt = Discrete_Radon_Transform(
+        path_to_picture=path_to_picture,
+        angle_acc=angle_accuracy,
+        shift_acc=shift_accuracy,
+    )
+    drdt.display_result(dir=save_to_dir)

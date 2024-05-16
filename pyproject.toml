@@ -31,11 +31,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-
-
-
-
-
 [tool.poetry.scripts]
 wiki = "discrete_radon_transform.console:wiki"
-discrete-radon-transform = "discrete_radon_transform.console:main"
+discrete-radon-transform = "discrete_radon_transform.Discrete_Radon_Transform:main"

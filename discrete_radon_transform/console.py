@@ -22,8 +22,11 @@ def wiki():
     click.echo(textwrap.fill(extract))
 
 
+"""Command-line interface."""
+
+
 @click.command()
 @click.version_option(version=__version__)
 def main():
-    """Command-line interface."""
+    """Discrete Radon Tranfsorm for straight lines detection."""
     click.echo("discrete radon transform for straight lines detection")
